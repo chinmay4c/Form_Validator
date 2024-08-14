@@ -4,6 +4,7 @@ const email = document.getElementById('email');
 const password = document.getElementById('password');
 const password2 = document.getElementById('password2');
 const phone = document.getElementById('phone');
+const dob = document.getElementById('dob');
 const passwordStrength = document.getElementById('passwordStrength');
 
 function showError(input, message) {
@@ -62,6 +63,22 @@ function checkPasswordsMatch(input1, input2) {
     }
 }
 
+function checkDateOfBirth(input) {
+    const dobValue = new Date(input.value);
+    const today = new Date();
+    const age = today.getFullYear() - dobValue.getFullYear();
+    const m = today.getMonth() - dobValue.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < dobValue.getDate())) {
+        age--;
+    }
+
+    if (age < 18) {
+        showError(input, 'You must be at least 18 years old');
+    } else {
+        showSuccess(input);
+    }
+}
+
 function getFieldName(input) {
     return input.id.charAt(0).toUpperCase() + input.id.slice(1);
 }
@@ -88,10 +105,11 @@ password.addEventListener('input', function() {
 form.addEventListener('submit', function(e) {
     e.preventDefault();
 
-    checkRequired([username, email, password, password2, phone]);
+    checkRequired([username, email, password, password2, phone, dob]);
     checkLength(username, 3, 15);
-    checkLength(password, 6, 25);
+    checkLength(password, 8, 25);
     checkEmail(email);
     checkPhone(phone);
     checkPasswordsMatch(password, password2);
+    checkDateOfBirth(dob);
 });
